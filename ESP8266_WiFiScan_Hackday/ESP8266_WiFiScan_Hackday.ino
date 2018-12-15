@@ -7,15 +7,17 @@
 #include <Adafruit_NeoPixel.h>
 #include "ESP8266WiFi.h"
 
-const int led_pin = 13;
-Adafruit_NeoPixel pix = Adafruit_NeoPixel(1, led_pin, NEO_GRB + NEO_KHZ800);
+#define LEDPIN        13
+#define NUMPIXELS     16
+
+Adafruit_NeoPixel pix = Adafruit_NeoPixel(NUMPIXELS, LEDPIN, NEO_GRB + NEO_KHZ800);
 uint8_t LEDr = 0, LEDg = 0, LEDb = 0, fBlink = 0;
 #define BLINK_INTERVAL 500 // [ms], 1000->500
 
-void set_led(int r, int g, int b, uint8_t f_blink){
+void set_led(int n, int r, int g, int b, uint8_t f_blink){
   LEDr = r; LEDg = g; LEDb = b;
   fBlink = f_blink;
-  pix.setPixelColor(0, pix.Color(LEDr, LEDg, LEDb));
+  pix.setPixelColor(n, pix.Color(LEDr, LEDg, LEDb));
   pix.show();
 }
 
@@ -42,12 +44,28 @@ void setup() {
   WiFi.disconnect();
   delay(100);
 
+  pix.begin(); // This initializes the NeoPixel library.
+
   Serial.println("Setup done");
 }
 
+int i = 0;
 void loop() {
   Serial.println("scan start");
 
+ if(i >= NUMPIXELS){
+    for(int j = 0; j < NUMPIXELS; j++){
+        set_led(j, 0, 0, 0, 0);
+    }
+    i = 0;
+  }
+
+  set_led(i, 128, 128, 128, 0);
+
+  i++;
+
+  Serial.println(i);
+ 
   // WiFi.scanNetworks will return the number of networks found
   int n = WiFi.scanNetworks();
   Serial.println("scan done");
@@ -73,5 +91,5 @@ void loop() {
   Serial.println("");
 
   // Wait a bit before scanning again
-  delay(5000);
+  delay(1000);
 }

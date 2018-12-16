@@ -6,6 +6,8 @@ int numberOfWiFi = 0;
 int Last_numberOfWiFi = 0;
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUMPIXELS, led_pin, NEO_GRB + NEO_KHZ800);
 
+boolean isWifiPowerMode = true;
+
 void setup() {
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
@@ -33,14 +35,26 @@ void loop() {
 
   if (numberOfWiFi < Last_numberOfWiFi) {
     for (int m = Last_numberOfWiFi; m > numberOfWiFi; m--) {
-      voidOutput(m);
       strip.setPixelColor(m, strip.Color(0, 0, 0));
       strip.show();
       delay(500);
     }
   } else {
+    int maxRSSI = -1;
+    String maxRSSI_SSID = "";
+    if(isWifiPowerMode){
+      for(int i = 0;i < numberOfWiFi;++i){
+        String ssid = WiFi.SSID(i);
+        int rssi = WiFi.RSSI(i) + 128;
+        if(maxRSSI < rssi){
+          maxRSSI = rssi;
+          maxRSSI_SSID = ssid;
+        }
+        strip.setPixelColor(i, strip.Color(rssi % 255, 32, 0));
+      }
+      return;
+    }
     for (int n = Last_numberOfWiFi; n < numberOfWiFi; n++) {
-      voidOutput(n);
       if (n < 10) {
         strip.setPixelColor(n, strip.Color(0, 32, 0));//Green
       } else if (n < 25) {

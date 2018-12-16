@@ -45,6 +45,7 @@ void loop() {
     if(isWifiPowerMode){
       for(int i = 0;i < numberOfWiFi;++i){
         String ssid = WiFi.SSID(i);
+        // unsigned
         int rssi = WiFi.RSSI(i) + 128;
         if(maxRSSI < rssi){
           maxRSSI = rssi;
@@ -52,6 +53,7 @@ void loop() {
         }
         strip.setPixelColor(i, strip.Color(rssi % 255, 32, 0));
       }
+      delay(500);
       return;
     }
     for (int n = Last_numberOfWiFi; n < numberOfWiFi; n++) {

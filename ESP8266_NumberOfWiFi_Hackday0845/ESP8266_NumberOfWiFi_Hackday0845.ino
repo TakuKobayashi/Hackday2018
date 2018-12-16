@@ -52,6 +52,7 @@ void loop() {
           maxRSSI_SSID = ssid;
         }
         strip.setPixelColor(i, strip.Color(rssi % 255, 32, 0));
+        strip.show();
       }
       delay(500);
       return;

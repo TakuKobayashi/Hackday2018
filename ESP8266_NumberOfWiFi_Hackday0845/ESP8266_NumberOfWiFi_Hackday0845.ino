@@ -56,6 +56,7 @@ void loop() {
       for(int i = 0;i < numberOfWiFi;++i){
         strip.setPixelColor(i, strip.Color(maxRSSI % 255, 32, 0));
       }
+      strip.show();
       delay(500);
       return;
     }
